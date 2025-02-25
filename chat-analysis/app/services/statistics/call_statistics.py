@@ -66,13 +66,17 @@ class CallStatistics:
     def get_type_of_calls_count(self):
         """Returns the count of each call type."""
         return self.df["type"].value_counts().to_dict()
-
+    
+    def get_missed_calls_per_participant(self):
+        """Returns the count of missed calls per participant, i.e. who never picks up the phone."""
+        return self.df[self.df["type"] == "Missed"]["receiver"].value_counts().to_dict()
     def analyze(self):
         """Analyzes the call data and returns a summary."""
         summary = {
             "average_call_duration": self.get_average_call_duration(),
             "most_frequent_call_type": self.get_most_frequent_call_type(),
             "average_call_frequency_per_day": self.get_average_call_frequency_per_day(),
+            "missed_calls_per_participant": self.get_missed_calls_per_participant(),
             "most_active_call_times": self.get_most_active_call_times(),
             "longest_call_details": self.get_longest_call_details(),
             "total_calls_per_participant": self.get_total_calls_per_participant(),
