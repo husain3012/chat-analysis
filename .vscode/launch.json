@@ -1,0 +1,36 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "CLI chat Sarfraz",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/chat-analysis/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "C:/Users/hsr30/dev/chat-analysis/chat-analysis/data/uploads/whatsapp_chat/Sarfraz, jmi.txt",
+                "--sample-size",
+                "200"
+            ],
+            "cwd": "${workspaceFolder}/chat-analysis",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "CLI chat Shahin",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/chat-analysis/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "C:/Users/hsr30/dev/chat-analysis/chat-analysis/data/uploads/whatsapp_chat/Shahin.txt",
+                "--sample-size",
+                "1000"
+            ],
+            "cwd": "${workspaceFolder}/chat-analysis",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+pandas
+dotenv
+sqlalchemy
+fastapi
+emoji
+numpy
+nltk
+symspellpy
+torch
+transformers
+tqdm
