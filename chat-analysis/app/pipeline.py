@@ -6,7 +6,7 @@ from app.services.utils import (
     save_full_report,
     make_folders,
 )
-from app.services.parsers import WhatsappParser
+from app.services.parsers import WhatsappParserAndroid, WhatsappParserIOS
 from app.services.preprocessing import ChatPreprocessor, CleanTextForNLP
 from app.services.context_creation import ContextCreator
 from app.services.statistics import ChatStatistics, CallStatistics, AnalysisStatistics
@@ -20,14 +20,15 @@ from pathlib import Path
 
 
 def cli_pipeline(
-    file_path: str, deep: bool = True, sample_size: int = None, batch_size=32
+    platform, file_path: str, deep: bool = True, sample_size: int = None, batch_size=32
 ):
     make_folders()
     logger = get_logger()
+    logger.info(f"Processing for platform: {platform}")
 
     file_path = Path(file_path)
     db = SessionLocal()
-    # Step 0. Extract zip if file is a zip
+
     if file_path.suffix == ".zip":
         logger.info(f"Extracting zip file: {file_path}")
         file_path = extract_chat_from_whatsapp_zip(file_path)
@@ -35,12 +36,19 @@ def cli_pipeline(
 
     # Step 1. Parse the chat file
     logger.info(f"Parsing chat file: {file_path}")
-    whatsapp_parser = WhatsappParser()
+    whatsapp_parser = None
+
+    if str(platform) == "android":
+        whatsapp_parser = WhatsappParserAndroid()
+    elif str(platform) == "ios":
+        whatsapp_parser = WhatsappParserIOS()
+
     messages_df, calls_df, participants = whatsapp_parser.parse_whatsapp_chat(file_path)
     if sample_size and len(messages_df) > sample_size:
         # take a subset of the messages for analysis, sample_size consecutive messages, starting from the random index within the range of the messages
         start_index = np.random.randint(0, len(messages_df) - sample_size)
         messages_df = messages_df.iloc[start_index : start_index + sample_size]
+
         calls_df = calls_df.sample(n=min(sample_size, len(calls_df)))
 
         messages_df = messages_df.sort_values(by=["date", "time"]).reset_index(

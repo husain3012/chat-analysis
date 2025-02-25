@@ -4,7 +4,7 @@ from tqdm import tqdm
 from datetime import datetime
 
 
-class WhatsappParser:
+class WhatsappParserIOS:
     def __init__(self):
 
         self.NON_TEXT_MARKER = "\u200e"  # Used for media and call logs
@@ -79,6 +79,7 @@ class WhatsappParser:
     def get_participants(self, chat_file):
 
         person_regex = r"\[.*\] (.+?)\: .*"
+        # 28/05/24, 11:52 pm - Sarfraz: Anyway
 
         participants = set()
         with open(chat_file, "r", encoding="utf-8") as file:
