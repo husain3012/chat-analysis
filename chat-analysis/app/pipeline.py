@@ -80,6 +80,7 @@ def cli_pipeline(
     save_intermediate_df("context_1day_clean_chat_df", context_1day_clean_chat_df)
     logger.info(f"Preprocessed {len(messages_df)} messages.")
     # Step 3. AI STUFF
+    deep_analysis = None
     if deep:
         logger.info("Performing AI analysis.")
         language_detection = LanguageDetection()
