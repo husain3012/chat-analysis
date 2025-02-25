@@ -8,6 +8,7 @@ import pandas as pd
 import zipfile
 import shutil
 
+
 def make_folders():
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
@@ -18,15 +19,20 @@ def make_folders():
     if not os.path.exists(LOG_FOLDER):
         os.makedirs(LOG_FOLDER)
 
+
 # create a logger instance for the application, which logs messages to the console and a file
-global __logger
+__logger = None
+
 
 def get_logger():
+    global __logger
     if __logger:
         return __logger
     __logger = logging.getLogger(__name__)
     __logger.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     file_handler = logging.FileHandler(
         LOG_FOLDER / f"CHAT_ANALYSIS_{datetime.now().strftime('%Y%m%d')}.log"
     )
@@ -34,7 +40,6 @@ def get_logger():
     __logger.addHandler(file_handler)
     __logger.addHandler(logging.StreamHandler())
     return __logger
-        
 
 
 def save_intermediate_df(filename: str, df):

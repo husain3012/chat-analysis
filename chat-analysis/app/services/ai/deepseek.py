@@ -1,6 +1,7 @@
 import pandas as pd
 from transformers import pipeline
 
+
 class DeepSeek:
     def __init__(self, model_path="deepseek-model-path"):
         """
@@ -78,8 +79,10 @@ class DeepSeek:
             "relationships": self.analyze_relationships(participants, combined_text),
             "language_used": self.analyze_language(combined_text),
             "humor_level": self.analyze_humor_level(combined_text),
-            "cultural_backgrounds": self.analyze_cultural_backgrounds(participants, combined_text),
-            "llm_insights": self.analyze_llm_insights(combined_text)
+            "cultural_backgrounds": self.analyze_cultural_backgrounds(
+                participants, combined_text
+            ),
+            "llm_insights": self.analyze_llm_insights(combined_text),
         }
 
         return insights
