@@ -9,3 +9,4 @@ symspellpy
 torch
 transformers
 tqdm
+typer

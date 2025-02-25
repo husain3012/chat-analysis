@@ -8,6 +8,16 @@ import pandas as pd
 import zipfile
 import shutil
 
+def make_folders():
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+    if not os.path.exists(PROCESSED_FOLDER):
+        os.makedirs(PROCESSED_FOLDER)
+    if not os.path.exists(TMP_FOLDER):
+        os.makedirs(TMP_FOLDER)
+    if not os.path.exists(LOG_FOLDER):
+        os.makedirs(LOG_FOLDER)
+
 # create a logger instance for the application, which logs messages to the console and a file
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -83,8 +93,7 @@ def extract_chat_from_whatsapp_zip(zip_path: Path) -> Path:
 
 
 def save_full_report(report_dict, report_name):
-    if not os.path.exists(PROCESSED_FOLDER):
-        os.makedirs(PROCESSED_FOLDER)
+
     report_path = PROCESSED_FOLDER / f"{report_name}.json"
     # remove the file if it exists
     if os.path.exists(report_path):
