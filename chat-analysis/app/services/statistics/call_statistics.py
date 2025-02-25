@@ -4,7 +4,7 @@ from collections import Counter
 
 
 class CallStatistics:
-    def __init__(self, calls_df):
+    def __init__(self, calls_df: pd.DataFrame, participants: tuple[str, str]):
         """
         Initializes the CallStatsAnalyzer with a calls dataframe.
         Assumes the dataframe has columns: sender, receiver, duration, type, date, time.
@@ -66,10 +66,18 @@ class CallStatistics:
     def get_type_of_calls_count(self):
         """Returns the count of each call type."""
         return self.df["type"].value_counts().to_dict()
-    
+
     def get_missed_calls_per_participant(self):
         """Returns the count of missed calls per participant, i.e. who never picks up the phone."""
-        return self.df[self.df["type"] == "Missed"]["receiver"].value_counts().to_dict()
+        missed_calls = self.df[
+            (self.df["type"] == "missed_voice_call")
+            | (self.df["type"] == "missed_video_call")
+            | (self.df["type"] == "silenced_voice_call")
+            | (self.df["type"] == "silenced_video_call")
+        ]
+        call_missed_by_participant = missed_calls["receiver"].value_counts().to_dict()
+        return call_missed_by_participant
+
     def analyze(self):
         """Analyzes the call data and returns a summary."""
         summary = {

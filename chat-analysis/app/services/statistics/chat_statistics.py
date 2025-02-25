@@ -226,6 +226,18 @@ class ChatStatistics:
 
         return dict(top_overall), {k: dict(v) for k, v in top_participant_wise.items()}
 
+    def media_stats(self):
+        """
+        Get number of media messages sent by each participant, along with media types.
+        """
+        media_messages = self.df[self.df["type"] != "text"]
+        unique_media_types = media_messages["type"].unique()
+        media_stats = {p: {t: 0 for t in unique_media_types} for p in self.participants}
+        for p in self.participants:
+            participant_media = media_messages[media_messages["sender"] == p]
+            media_stats[p] = participant_media["type"].value_counts().to_dict()
+        return media_stats
+
     def analyze(self):
         """
         Analyze chat data.
@@ -238,6 +250,7 @@ class ChatStatistics:
             "longest_message": self.longest_message(),
             "average_reply_time": self.average_reply_time(),
             "who_apologizes_more": self.who_apologizes_more(),
+            "media_stats": self.media_stats(),
             "who_asks_more_questions": self.who_asks_more_questions(),
             "who_swears_more": self.who_swears_more(),
             "who_compliments_more": self.who_compliments_more(),

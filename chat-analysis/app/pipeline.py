@@ -4,7 +4,7 @@ from app.services.utils import (
     save_intermediate_dict,
     extract_chat_from_whatsapp_zip,
     save_full_report,
-    make_folders
+    make_folders,
 )
 from app.services.parsers import WhatsappParser
 from app.services.preprocessing import ChatPreprocessor, CleanTextForNLP
@@ -112,7 +112,7 @@ def cli_pipeline(
     chat_analyzer = ChatStatistics(
         chat_df=raw_text_messages_df, participants=participants
     )
-    call_analyzer = CallStatistics(calls_df=calls_df)
+    call_analyzer = CallStatistics(calls_df=calls_df, participants=participants)
     chat_stats = chat_analyzer.analyze()
     call_stats = call_analyzer.analyze()
     save_intermediate_dict("chat_stats", chat_stats)

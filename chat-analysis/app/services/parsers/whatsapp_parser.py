@@ -20,6 +20,7 @@ class WhatsappParser:
 
         self.call_regex = r"(voice call|video call)\, \d (min|sec|h)"
         self.missed_call_regex = r"missed (voice|video) call"
+        self.no_answer_call_regex = r"(voice|video) call\, no answer"
         self.failed_call_regex = r"call failed\, try again"
         self.group_call_regex = r"group call\, \d invited"
         self.silenced_call_regex = r"(silenced voice call|silenced video call), (.+)$"
@@ -45,6 +46,8 @@ class WhatsappParser:
             "video call": "video_call",
             "missed voice call": "missed_voice_call",
             "missed video call": "missed_video_call",
+            "voice call, no answer": "missed_voice_call",
+            "video call, no answer": "missed_video_call",
             "failed call": "failed_call",
             "group call": "group_call",
             "silenced voice call": "silenced_voice_call",
@@ -114,6 +117,11 @@ class WhatsappParser:
             call_type = self.CALL_TYPES.get(
                 re.search(r"missed voice call|missed video call", content).group(),
                 "unknown_call",
+            )
+            return call_type, duration, silence_reason, group_call_invites
+        if re.search(self.no_answer_call_regex, content):
+            call_type = self.CALL_TYPES.get(
+                re.search(self.no_answer_call_regex, content).group(), "unknown_call"
             )
             return call_type, duration, silence_reason, group_call_invites
         if re.search(self.failed_call_regex, content):
@@ -233,6 +241,7 @@ class WhatsappParser:
                         re.search(self.failed_call_regex, content),
                         re.search(self.group_call_regex, content),
                         re.search(self.silenced_call_regex, content),
+                        re.search(self.no_answer_call_regex, content),
                     ]
                 ):
                     call_type, duration, silence_reason, group_call_invites = (
