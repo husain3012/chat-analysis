@@ -1,10 +1,10 @@
 from app.services.utils import (
-    logger,
+    get_logger,
     save_intermediate_df,
     save_intermediate_dict,
     extract_chat_from_whatsapp_zip,
     save_full_report,
-    make_folders,
+
 )
 from app.services.parsers import WhatsappParser
 from app.services.preprocessing import ChatPreprocessor, CleanTextForNLP
@@ -22,7 +22,8 @@ from pathlib import Path
 def cli_pipeline(
     file_path: str, deep: bool = True, sample_size: int = None, batch_size=32
 ):
-    make_folders()
+    logger = get_logger()
+   
     file_path = Path(file_path)
     db = SessionLocal()
     # Step 0. Extract zip if file is a zip

@@ -19,15 +19,22 @@ def make_folders():
         os.makedirs(LOG_FOLDER)
 
 # create a logger instance for the application, which logs messages to the console and a file
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-file_handler = logging.FileHandler(
-    LOG_FOLDER / f"CHAT_ANALYSIS_{datetime.now().strftime('%Y%m%d')}.log"
-)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-logger.addHandler(logging.StreamHandler())
+global __logger
+
+def get_logger():
+    if __logger:
+        return __logger
+    __logger = logging.getLogger(__name__)
+    __logger.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    file_handler = logging.FileHandler(
+        LOG_FOLDER / f"CHAT_ANALYSIS_{datetime.now().strftime('%Y%m%d')}.log"
+    )
+    file_handler.setFormatter(formatter)
+    __logger.addHandler(file_handler)
+    __logger.addHandler(logging.StreamHandler())
+    return __logger
+        
 
 
 def save_intermediate_df(filename: str, df):
