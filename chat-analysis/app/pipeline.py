@@ -44,48 +44,35 @@ def cli_pipeline(
         whatsapp_parser = WhatsappParserIOS()
 
     messages_df, calls_df, participants = whatsapp_parser.parse_whatsapp_chat(file_path)
+
     if sample_size and len(messages_df) > sample_size:
-        # take a subset of the messages for analysis, sample_size consecutive messages, starting from the random index within the range of the messages
-        start_index = np.random.randint(0, len(messages_df) - sample_size)
-        messages_df = messages_df.iloc[start_index : start_index + sample_size]
-
-        calls_df = calls_df.sample(n=min(sample_size, len(calls_df)))
-
-        messages_df = messages_df.sort_values(by=["date", "time"]).reset_index(
-            drop=True
-        )
-        calls_df = calls_df.sort_values(by=["date", "time"]).reset_index(drop=True)
+        messages_df = messages_df.tail(sample_size)
+        calls_df = calls_df.tail(sample_size)
 
     logger.info(f"Parsed {len(messages_df)} messages from the chat file.")
 
-    # Step 2. Preprocess the chat data
-    logger.info("Preprocessing chat data.")
-    chat_preprocessor = ChatPreprocessor()
-    chat_cleaner = CleanTextForNLP()
-    context_creator = ContextCreator(participants=participants)
+    chat_stats = ChatStatistics(
+        chat_df=messages_df, participants=participants
+    ).analyze()
+    
+    preprocessed_chat_df = ChatPreprocessor().process(messages_df)
 
-    raw_text_messages_df = chat_preprocessor.process(
-        messages_df, text_columns=["content"]
-    )
+    cleaned_chat_df = CleanTextForNLP().clean_text(preprocessed_chat_df)
+    
 
-    clean_text_messages_df = chat_cleaner.clean_text(
-        raw_text_messages_df, text_columns=["content"]
-    )
 
-    context_5min_clean_raw_df = context_creator.merge(
-        raw_text_messages_df, "content", "merged_content", 5
+    chat_stats = ChatStatistics(
+        chat_df=preprocessed_chat_df, participants=participants
+    ).analyze() 
+
+    logger.info("Basic chat statistics:")
+    chat_analyzer = ChatStatistics(
+        chat_df=messages_df, participants=participants
     )
-    context_60min_clean_chat_df = context_creator.merge(
-        clean_text_messages_df, "content", "merged_content", 60
-    )
-    context_1day_clean_chat_df = context_creator.merge(
-        clean_text_messages_df, "content", "merged_content", 1440
-    )
-    save_intermediate_df("raw_text_messages_df", raw_text_messages_df)
-    save_intermediate_df("clean_text_messages_df", clean_text_messages_df)
-    save_intermediate_df("context_5min_clean_raw_df", context_5min_clean_raw_df)
-    save_intermediate_df("context_60min_clean_chat_df", context_60min_clean_chat_df)
-    save_intermediate_df("context_1day_clean_chat_df", context_1day_clean_chat_df)
+    chat_stats = chat_analyzer.analyze()
+  
+
+   
     logger.info(f"Preprocessed {len(messages_df)} messages.")
     # Step 3. AI STUFF
     deep_analysis = None
@@ -117,9 +104,7 @@ def cli_pipeline(
     # skip for now
     # Step 4. Statistics
     logger.info("Calculating chat statistics.")
-    chat_analyzer = ChatStatistics(
-        chat_df=raw_text_messages_df, participants=participants
-    )
+    
     call_analyzer = CallStatistics(calls_df=calls_df, participants=participants)
     chat_stats = chat_analyzer.analyze()
     call_stats = call_analyzer.analyze()

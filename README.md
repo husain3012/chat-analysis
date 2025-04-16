@@ -9,7 +9,8 @@ Whatsapp Chat Analyzer (WIP)
     - [Prerequisites](#prerequisites)
     - [Installing](#installing)
   - [Usage ](#usage-)
-    - [CLI options](#cli-options)
+  - [CLI options](#cli-options)
+    - [`analyze` command](#analyze-command)
 
 ## About <a name = "about"></a>
 
@@ -57,6 +58,12 @@ What things you need to install the software and how to install them.
     ```bash
     python cli.py --help
     ```
+- Setup CUDA if you have a GPU
+
+    ```bash
+    pip uninstall torch -y
+    pip install torch  --index-url https://download.pytorch.org/whl/cu121
+    ```
 
 ## Usage <a name = "usage"></a>
 
@@ -64,13 +71,13 @@ What things you need to install the software and how to install them.
 - Run the cli
 
     ```bash
-    python cli.py  path/to/zip/file
+    python cli.py analyze path/to/zip/file
     ```
 - The cli will save the output in json format in `data/processed/` directory
 - Your chat file will be saved in `data/uploads/whatsapp_chat` directory, make sure to delete it after the analysis is done
 
-### CLI options
-
+## CLI options
+### `analyze` command
 `--help` : Shows help \
 `--no-deep` : Disables deep learning analysis\
 `--sample-size` : Selects a continuous subset from the chat randomly.\

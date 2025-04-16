@@ -69,7 +69,7 @@ class LanguageDetection:
         """
         results = []
 
-        for i in tqdm(range(0, len(texts), batch_size), desc="Processing Batches"):
+        for i in tqdm(range(0, len(texts), batch_size), desc=f"Detecting languages"):
             batch_texts = texts[i : i + batch_size]
 
             # Handle None or empty strings

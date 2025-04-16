@@ -42,28 +42,6 @@ def analyze(
     # save dictionary to json file
 
 
-@app.command()
-def setup_cuda():
-
-    if torch.cuda.is_available():
-        type.echo("CUDA is available")
-    else:
-        typer.echo("CUDA is not available")
-
-        if os.name == "nt":
-            typer.echo("Setting up CUDA")
-            commands = [
-                "pip uninstall torch -y",
-                "pip install torch  --index-url https://download.pytorch.org/whl/cu121",
-            ]
-            for command in commands:
-                os.system(command)
-
-        else:
-            os.system(f"No CUDA setup for {os.name}")
-
-    typer.echo("CUDA setup complete")
-
 
 if __name__ == "__main__":
     app()

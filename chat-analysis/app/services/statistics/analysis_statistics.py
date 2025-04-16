@@ -24,18 +24,12 @@ class AnalysisStatistics:
         self.df["date"] = pd.to_datetime(self.df["date"])
         self.df["week"] = pd.to_datetime(self.df["date"]).dt.to_period(
             "W"
-        )  # Extract week for grouping
+        )  
+        
         self.participants = participants
         self._map_sentiment()
         self._parse_toxicity_column()
         self._parse_emotion_column()
-        self.emotion_mapping = {
-            "love": {"love", "caring", "adoration", "affection", "attraction"},
-            "sadness": {"sadness", "disappointment", "hurt", "loneliness", "sorrow"},
-            "anger": {"anger", "annoyance", "rage", "frustration", "resentment"},
-            "joy": {"joy", "happiness", "excitement", "enthusiasm", "contentment"},
-            "grief": {"grief", "despair", "mourning", "guilt", "hopelessness"},
-        }
 
     sorted_emotions = [
         "love",
@@ -67,9 +61,6 @@ class AnalysisStatistics:
         "disgust",
     ]
 
-    def _map_sentiment(self):
-        """Converts sentiment labels to numerical values."""
-        self.df["sentiment_numeric"] = self.df["sentiment"].map(self.SENTIMENT_MAPPING)
 
     def _parse_toxicity_column(self):
         """Parses 'toxicity' into numerical scores."""
@@ -184,20 +175,7 @@ class AnalysisStatistics:
             .to_dict(orient="records")
         )
 
-    def get_sentiment_summary(self):
-        """
-        Returns top positive and negative days.
-        """
-        sentiment_avg = (
-            self.df.groupby("date")["sentiment_numeric"].mean().sort_values()
-        )
-        most_negative = sentiment_avg.head(5).to_dict()
-        most_positive = sentiment_avg.tail(5).to_dict()
-        # convert to date string
-        most_negative = {k.strftime("%Y-%m-%d"): v for k, v in most_negative.items()}
-        most_positive = {k.strftime("%Y-%m-%d"): v for k, v in most_positive.items()}
 
-        return most_negative, most_positive
 
     def love_score(self):
         """

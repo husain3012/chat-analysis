@@ -11,6 +11,7 @@
             "program": "${workspaceFolder}/chat-analysis/cli.py",
             "console": "integratedTerminal",
             "args": [
+                "ios",
                 "C:/Users/hsr30/dev/chat-analysis/chat-analysis/data/uploads/whatsapp_chat/Sarfraz, jmi.txt",
                 "--sample-size",
                 "200"
@@ -19,15 +20,14 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
-            "name": "CLI chat Shahin",
+            "name": "CLI chat Shahin NO AI",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/chat-analysis/cli.py",
             "console": "integratedTerminal",
             "args": [
                 "C:/Users/hsr30/dev/chat-analysis/chat-analysis/data/uploads/whatsapp_chat/Shahin.txt",
-                "--sample-size",
-                "1000"
+                "--no-deep"
             ],
             "cwd": "${workspaceFolder}/chat-analysis",
             "envFile": "${workspaceFolder}/.env"

@@ -179,3 +179,4 @@ cython_debug/
 **/processed/*
 **/uploads/*
 prototyping/
+*.pkl
